@@ -29,29 +29,31 @@ function iniciarEscaneo() {
 }
 
 // Función para registrar la recarga
+// 🔥 Configuración de Firebase
+const firebaseConfig = {
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_PROYECTO.firebaseapp.com",
+    projectId: "TU_PROYECTO",
+    storageBucket: "TU_PROYECTO.appspot.com",
+    messagingSenderId: "TU_MENSAJERIA_ID",
+    appId: "TU_APP_ID"
+};
+
+// 🔥 Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// 📌 Función para registrar recarga en Firestore
 async function registrarRecarga(dispenserId, usuario) {
-    const datos = {
-        dispenser: dispenserId,
-        usuario: usuario
-    };
-
     try {
-        const response = await fetch(GOOGLE_SHEETS_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(datos)
+        await db.collection("recargas").add({
+            dispenser: dispenserId,
+            usuario: usuario,
+            fecha: new Date().toLocaleString()
         });
-
-        const resultado = await response.json();
-        if (resultado.status === "ok") {
-            document.getElementById("status").innerText = "Registro guardado!";
-        } else {
-            document.getElementById("status").innerText = "Error: " + resultado.error;
-        }
+        document.getElementById("status").innerText = "Registro guardado en Firebase!";
     } catch (error) {
-        document.getElementById("status").innerText = "Error de conexión";
+        document.getElementById("status").innerText = "Error al guardar.";
         console.error("Error en la solicitud:", error);
     }
 }
