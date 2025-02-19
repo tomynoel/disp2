@@ -8,8 +8,8 @@
     <!-- Cargar la librería de escaneo QR -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 
-    <!-- Cargar el script con defer para que se ejecute después del HTML -->
-    <script defer src="script.js"></script>
+    <!-- Cargar el script de Firebase y el QR con módulo -->
+    <script type="module" src="script.js"></script>
 
     <style>
         body {
@@ -36,10 +36,11 @@
 
     <label for="nombre">Tu Nombre:</label>
     <input type="text" id="nombre" placeholder="Ingresa tu nombre">
-    <button onclick="iniciarEscaneo()">Escanear QR</button>
+    <button id="btnEscanear">Escanear QR</button>
 
     <div id="reader"></div>
     <p id="status"></p>
 
 </body>
 </html>
+
