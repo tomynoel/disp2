@@ -18,11 +18,10 @@ const db = getFirestore(app);
 
 // 📌 Función para registrar recarga en Firestore
 // 📌 Función para registrar recarga en Firestore con ID aleatorio
-// 📌 Función para registrar recarga en Firestore con ID aleatorio, fecha y hora formateadas
-// 📌 Función para registrar recarga en Firestore dentro de una colección por dispenser
+// 📌 Función para registrar recarga en Firestore en una subcolección dentro del dispenser
 async function registrarRecarga(dispenserId, usuario) {
     try {
-        console.log("📤 Registrando en Firebase en la colección:", dispenserId, "Usuario:", usuario);
+        console.log("📤 Registrando en Firebase dentro del dispenser:", dispenserId, "Usuario:", usuario);
 
         // 🔥 Obtener fecha y hora actual en formato deseado
         const fechaActual = new Date();
@@ -36,20 +35,21 @@ async function registrarRecarga(dispenserId, usuario) {
         horas = horas % 12 || 12; // Convierte 0 en 12 para formato AM/PM
         const horaFormateada = `${horas}:${minutos}:${segundos} ${ampm}`;
 
-        // 🔥 Guardamos dentro de la colección del dispenser
+        // 🔥 Guardamos dentro de la subcolección "registros" dentro de cada dispenser
         await addDoc(collection(db, "recargas", dispenserId, "registros"), {  
             usuario: usuario,
             fecha: fechaFormateada,  // 🔥 Guardamos la fecha en formato dd/mm/aaaa
             hora: horaFormateada     // 🔥 Guardamos la hora en formato hh:mm:ss AM/PM
         });
 
-        document.getElementById("status").innerText = `✅ Registro guardado (${fechaFormateada} - ${horaFormateada})!`;
+        document.getElementById("status").innerText = `✅ Registro guardado en ${dispenserId} (${fechaFormateada} - ${horaFormateada})!`;
         console.log("✅ Registro exitoso en:", dispenserId, "Fecha:", fechaFormateada, "Hora:", horaFormateada);
     } catch (error) {
         document.getElementById("status").innerText = "❌ Error al guardar.";
         console.error("🔥 Error en la solicitud:", error);
     }
 }
+
 
 
 // 📌 Función para iniciar el escaneo de QR
