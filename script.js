@@ -17,42 +17,31 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // 📌 Función para registrar recarga en Firestore en una subcolección de cada dispenser
+// 📌 Función para registrar recarga en Firestore con ID aleatorio, fecha y hora formateadas
 async function registrarRecarga(dispenserId, usuario) {
     try {
-        console.log("📤 Intentando registrar en Firebase en el dispenser:", dispenserId, "Usuario:", usuario);
+        console.log("📤 Registrando en Firebase:", dispenserId, usuario);
 
         // 🔥 Obtener fecha y hora actual en formato deseado
         const fechaActual = new Date();
         const fechaFormateada = `${fechaActual.getDate().toString().padStart(2, '0')}/${(fechaActual.getMonth() + 1).toString().padStart(2, '0')}/${fechaActual.getFullYear()}`;
-        
-        // 🔥 Formato de hora con AM/PM
-        let horas = fechaActual.getHours();
-        const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
-        const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
-        const ampm = horas >= 12 ? 'PM' : 'AM';
-        horas = horas % 12 || 12; // Convierte 0 en 12 para formato AM/PM
-        const horaFormateada = `${horas}:${minutos}:${segundos} ${ampm}`;
+        const horaFormateada = `${fechaActual.getHours().toString().padStart(2, '0')}:${fechaActual.getMinutes().toString().padStart(2, '0')}:${fechaActual.getSeconds().toString().padStart(2, '0')}`;
 
-        // 🔥 Crear referencia al documento del dispenser (aunque no exista aún, Firestore lo crea)
-        const dispenserRef = doc(db, "recargas", dispenserId);
-        
-        // 🔥 Crear referencia a la subcolección "registros" dentro del dispenser
-        const registrosRef = collection(dispenserRef, "registros");
-
-        // 🔥 Agregar un nuevo documento con ID aleatorio en la subcolección "registros"
-        await addDoc(registrosRef, {  
+        await addDoc(collection(db, "recargas"), {
+            dispenser: dispenserId,
             usuario: usuario,
             fecha: fechaFormateada,  // 🔥 Guardamos la fecha en formato dd/mm/aaaa
-            hora: horaFormateada     // 🔥 Guardamos la hora en formato hh:mm:ss AM/PM
+            hora: horaFormateada     // 🔥 Guardamos la hora en formato hh:mm:ss
         });
 
-        document.getElementById("status").innerText = `✅ Registro guardado en ${dispenserId} (${fechaFormateada} - ${horaFormateada})!`;
-        console.log("✅ Registro exitoso en:", dispenserId, "Fecha:", fechaFormateada, "Hora:", horaFormateada);
+        document.getElementById("status").innerText = `✅ Registro guardado en Firebase (${fechaFormateada} - ${horaFormateada})!`;
+        console.log("✅ Registro exitoso con fecha:", fechaFormateada, "y hora:", horaFormateada);
     } catch (error) {
-        document.getElementById("status").innerText = "❌ Error al guardar. Ver consola.";
+        document.getElementById("status").innerText = "❌ Error al guardar.";
         console.error("🔥 Error en la solicitud:", error);
     }
 }
+
 
 // 📌 Función para iniciar el escaneo de QR
 function iniciarEscaneo() {
