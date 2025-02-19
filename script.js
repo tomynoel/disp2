@@ -17,11 +17,12 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // 📌 Función para registrar recarga en Firestore
+// 📌 Función para registrar recarga en Firestore con ID aleatorio
 async function registrarRecarga(dispenserId, usuario) {
     try {
         console.log("📤 Registrando en Firebase:", dispenserId, usuario);
 
-        await addDoc(collection(db, "recargas"), {
+        await addDoc(collection(db, "recargas"), {  // 🔥 addDoc genera un ID aleatorio
             dispenser: dispenserId,
             usuario: usuario,
             fecha: serverTimestamp() // 🔥 Fecha automática
