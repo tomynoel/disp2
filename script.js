@@ -1,6 +1,6 @@
-// 🔥 Importar Firebase
+// 📌 Importar Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, collection, doc, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 🔥 Configuración de Firebase
 const firebaseConfig = {
@@ -16,12 +16,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 📌 Función para registrar recarga en Firestore
-// 📌 Función para registrar recarga en Firestore con ID aleatorio
-// 📌 Función para registrar recarga en Firestore dentro de una subcolección por cada dispenser
+// 📌 Función para registrar recarga en Firestore en una subcolección de cada dispenser
 async function registrarRecarga(dispenserId, usuario) {
     try {
-        console.log("📤 Registrando en Firebase en la subcolección del dispenser:", dispenserId, "Usuario:", usuario);
+        console.log("📤 Intentando registrar en Firebase en el dispenser:", dispenserId, "Usuario:", usuario);
 
         // 🔥 Obtener fecha y hora actual en formato deseado
         const fechaActual = new Date();
@@ -35,11 +33,13 @@ async function registrarRecarga(dispenserId, usuario) {
         horas = horas % 12 || 12; // Convierte 0 en 12 para formato AM/PM
         const horaFormateada = `${horas}:${minutos}:${segundos} ${ampm}`;
 
-        // 🔥 Crear la referencia a la subcolección "registros" dentro del dispenser
-        const dispenserRef = doc(db, "recargas", dispenserId); // Referencia al documento del dispenser
-        const registrosRef = collection(dispenserRef, "registros"); // Subcolección "registros"
+        // 🔥 Crear referencia al documento del dispenser (aunque no exista aún, Firestore lo crea)
+        const dispenserRef = doc(db, "recargas", dispenserId);
+        
+        // 🔥 Crear referencia a la subcolección "registros" dentro del dispenser
+        const registrosRef = collection(dispenserRef, "registros");
 
-        // 🔥 Agregar un nuevo registro dentro de la subcolección del dispenser
+        // 🔥 Agregar un nuevo documento con ID aleatorio en la subcolección "registros"
         await addDoc(registrosRef, {  
             usuario: usuario,
             fecha: fechaFormateada,  // 🔥 Guardamos la fecha en formato dd/mm/aaaa
@@ -49,12 +49,10 @@ async function registrarRecarga(dispenserId, usuario) {
         document.getElementById("status").innerText = `✅ Registro guardado en ${dispenserId} (${fechaFormateada} - ${horaFormateada})!`;
         console.log("✅ Registro exitoso en:", dispenserId, "Fecha:", fechaFormateada, "Hora:", horaFormateada);
     } catch (error) {
-        document.getElementById("status").innerText = "❌ Error al guardar.";
+        document.getElementById("status").innerText = "❌ Error al guardar. Ver consola.";
         console.error("🔥 Error en la solicitud:", error);
     }
 }
-
-
 
 // 📌 Función para iniciar el escaneo de QR
 function iniciarEscaneo() {
