@@ -5,7 +5,7 @@ import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.g
 // 🔥 Configuración de Firebase (REEMPLAZA CON TUS DATOS)
 const firebaseConfig = {
     apiKey: "AIzaSyCJzNFFjA__D7GDCHkxj_H6_HTtIvUBHzY",
-    authDomain: "registrodis.firebaseapp.com",
+  authDomain: "registrodis.firebaseapp.com",
   projectId: "registrodis",
   storageBucket: "registrodis.firebasestorage.app",
   messagingSenderId: "274283773647",
@@ -46,12 +46,13 @@ function iniciarEscaneo() {
     const scanner = new Html5Qrcode("reader");
 
     scanner.start(
-        { facingMode: "environment" }, // Cámara trasera
+        { facingMode: "environment" }, // Usa la cámara trasera
         {
             fps: 10,
-            qrbox: { width: 250, height: 250 } // Tamaño del área de escaneo
+            qrbox: { width: 250, height: 250 } // Define el tamaño del área de escaneo
         },
         qrCodeMessage => {
+            console.log("QR Detectado:", qrCodeMessage);
             scanner.stop();
             document.getElementById("reader").style.display = "none";
             registrarRecarga(qrCodeMessage, nombreUsuario);
@@ -65,5 +66,7 @@ function iniciarEscaneo() {
     });
 }
 
-// 📌 Hacer que iniciarEscaneo sea accesible desde HTML
-window.iniciarEscaneo = iniciarEscaneo;
+// 📌 Asignar la función de escaneo al botón
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("btnEscanear").addEventListener("click", iniciarEscaneo);
+});
