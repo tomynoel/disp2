@@ -18,10 +18,10 @@ const db = getFirestore(app);
 
 // 📌 Función para registrar recarga en Firestore
 // 📌 Función para registrar recarga en Firestore con ID aleatorio
-// 📌 Función para registrar recarga en Firestore en una subcolección dentro del dispenser
+// 📌 Función para registrar recarga en Firestore dentro de una subcolección por cada dispenser
 async function registrarRecarga(dispenserId, usuario) {
     try {
-        console.log("📤 Registrando en Firebase dentro del dispenser:", dispenserId, "Usuario:", usuario);
+        console.log("📤 Registrando en Firebase en la subcolección del dispenser:", dispenserId, "Usuario:", usuario);
 
         // 🔥 Obtener fecha y hora actual en formato deseado
         const fechaActual = new Date();
@@ -35,8 +35,12 @@ async function registrarRecarga(dispenserId, usuario) {
         horas = horas % 12 || 12; // Convierte 0 en 12 para formato AM/PM
         const horaFormateada = `${horas}:${minutos}:${segundos} ${ampm}`;
 
-        // 🔥 Guardamos dentro de la subcolección "registros" dentro de cada dispenser
-        await addDoc(collection(db, "recargas", dispenserId, "registros"), {  
+        // 🔥 Crear la referencia a la subcolección "registros" dentro del dispenser
+        const dispenserRef = doc(db, "recargas", dispenserId); // Referencia al documento del dispenser
+        const registrosRef = collection(dispenserRef, "registros"); // Subcolección "registros"
+
+        // 🔥 Agregar un nuevo registro dentro de la subcolección del dispenser
+        await addDoc(registrosRef, {  
             usuario: usuario,
             fecha: fechaFormateada,  // 🔥 Guardamos la fecha en formato dd/mm/aaaa
             hora: horaFormateada     // 🔥 Guardamos la hora en formato hh:mm:ss AM/PM
