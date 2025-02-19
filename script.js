@@ -6,10 +6,10 @@ import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.g
 const firebaseConfig = {
     apiKey: "AIzaSyCJzNFFjA__D7GDCHkxj_H6_HTtIvUBHzY",
     authDomain: "registrodis.firebaseapp.com",
-    projectId: "registrodis",
-    storageBucket: "registrodis.firebasestorage.app",
-    messagingSenderId: "274283773647",
-    appId: "1:274283773647:web:4adef02eabc01fde5901ba"
+  projectId: "registrodis",
+  storageBucket: "registrodis.firebasestorage.app",
+  messagingSenderId: "274283773647",
+  appId: "1:274283773647:web:4adef02eabc01fde5901ba"
 };
 
 // 🔥 Inicializar Firebase y Firestore
@@ -31,7 +31,6 @@ async function registrarRecarga(dispenserId, usuario) {
     }
 }
 
-// 📌 Función para iniciar el escaneo de QR
 // 📌 Función para iniciar el escaneo de QR
 function iniciarEscaneo() {
     let nombreUsuario = document.getElementById("nombre").value.trim();
@@ -66,3 +65,5 @@ function iniciarEscaneo() {
     });
 }
 
+// 📌 Hacer que iniciarEscaneo sea accesible desde HTML
+window.iniciarEscaneo = iniciarEscaneo;
