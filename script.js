@@ -1,10 +1,38 @@
 const GOOGLE_SHEETS_URL = "TU_URL_DEL_SCRIPT"; // Pega aquí la URL de Apps Script
 
-// Función para enviar los datos al Google Sheets
-async function registrarRecarga(dispenserId) {
+let scanner;  // Variable para el escáner QR
+
+// Función para iniciar el escaneo
+function iniciarEscaneo() {
+    let nombreUsuario = document.getElementById("nombre").value.trim();
+
+    if (!nombreUsuario) {
+        alert("Por favor, ingresa tu nombre antes de escanear el QR.");
+        return;
+    }
+
+    document.getElementById("reader").style.display = "block"; // Mostrar escáner
+
+    scanner = new Html5Qrcode("reader");
+    scanner.start(
+        { facingMode: "environment" }, // Usa la cámara trasera
+        { fps: 10, qrbox: 250 },
+        qrCodeMessage => {
+            scanner.stop();  // Detiene el escáner después de leer un QR
+            document.getElementById("reader").style.display = "none"; // Oculta el escáner
+
+            registrarRecarga(qrCodeMessage, nombreUsuario);
+        }
+    ).catch(err => {
+        console.error("Error al iniciar el escáner:", err);
+    });
+}
+
+// Función para registrar la recarga
+async function registrarRecarga(dispenserId, usuario) {
     const datos = {
         dispenser: dispenserId,
-        usuario: "Operario1" // Puedes personalizar esto si tienes autenticación
+        usuario: usuario
     };
 
     try {
@@ -27,16 +55,6 @@ async function registrarRecarga(dispenserId) {
         document.getElementById("status").innerText = "Error de conexión";
     }
 }
-
-// Inicializar el escáner QR
-const scanner = new Html5Qrcode("reader");
-scanner.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
-    qrCodeMessage => {
-        registrarRecarga(qrCodeMessage);
-    }
-);
 
 // Función para cargar registros desde Google Sheets y mostrarlos en la tabla
 async function cargarRegistros() {
@@ -61,3 +79,4 @@ async function cargarRegistros() {
 
 // Cargar registros al abrir la página
 window.onload = cargarRegistros;
+
