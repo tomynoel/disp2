@@ -32,6 +32,7 @@ async function registrarRecarga(dispenserId, usuario) {
 }
 
 // 📌 Función para iniciar el escaneo de QR
+// 📌 Función para iniciar el escaneo de QR
 function iniciarEscaneo() {
     let nombreUsuario = document.getElementById("nombre").value.trim();
 
@@ -40,18 +41,28 @@ function iniciarEscaneo() {
         return;
     }
 
+    // 📌 Mostrar el escáner
     document.getElementById("reader").style.display = "block";
 
-    let scanner = new Html5Qrcode("reader");
+    const scanner = new Html5Qrcode("reader");
+
     scanner.start(
         { facingMode: "environment" }, // Cámara trasera
-        { fps: 10, qrbox: 250 },
+        {
+            fps: 10,
+            qrbox: { width: 250, height: 250 } // Tamaño del área de escaneo
+        },
         qrCodeMessage => {
             scanner.stop();
             document.getElementById("reader").style.display = "none";
             registrarRecarga(qrCodeMessage, nombreUsuario);
+        },
+        errorMessage => {
+            console.warn("No se detectó QR:", errorMessage);
         }
     ).catch(err => {
         console.error("Error al iniciar el escáner:", err);
+        alert("No se pudo iniciar el escáner. Verifica los permisos de la cámara.");
     });
 }
+
