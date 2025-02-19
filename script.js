@@ -1,4 +1,4 @@
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzoWaQCxcG5U48lbXQs9RIlNMBnRX450RJI1Bk7JyE2yIZWiSypjYjGjhYcRMxBWilRoA/exec"; // Pega aquí la URL de Apps Script
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbztzZ1VGqIIBF3rUq_inCalk_dbfo5EqaFyiWa6CZL8nwV5qq_Xea-7_Q1QyBR_hPl5cg/exec"; // Pega aquí la URL de Apps Script
 
 let scanner;  // Variable para el escáner QR
 
@@ -41,11 +41,15 @@ async function registrarRecarga(dispenserId, usuario) {
             headers: {
                 "Content-Type": "application/json"
             },
-            mode: "no-cors", // 🔥 SOLUCIÓN PARA EVITAR CORS
             body: JSON.stringify(datos)
         });
 
-        document.getElementById("status").innerText = "Registro enviado (sin respuesta)";
+        const resultado = await response.json();
+        if (resultado.status === "ok") {
+            document.getElementById("status").innerText = "Registro guardado!";
+        } else {
+            document.getElementById("status").innerText = "Error: " + resultado.error;
+        }
     } catch (error) {
         document.getElementById("status").innerText = "Error de conexión";
         console.error("Error en la solicitud:", error);
