@@ -1,6 +1,6 @@
 // 🔥 Importar Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 🔥 Configuración de Firebase
 const firebaseConfig = {
@@ -16,12 +16,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 📌 Función para registrar recarga en Firestore con el ID del dispenser como nombre de documento
+// 📌 Función para registrar recarga en Firestore
 async function registrarRecarga(dispenserId, usuario) {
     try {
         console.log("📤 Registrando en Firebase:", dispenserId, usuario);
 
-        await setDoc(doc(db, "recargas", dispenserId), {
+        await addDoc(collection(db, "recargas"), {
+            dispenser: dispenserId,
             usuario: usuario,
             fecha: serverTimestamp() // 🔥 Fecha automática
         });
@@ -68,12 +69,6 @@ function iniciarEscaneo() {
         alert("No se pudo iniciar el escáner. Verifica los permisos de la cámara.");
     });
 }
-
-// 📌 Asignar la función de escaneo al botón
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("btnEscanear").addEventListener("click", iniciarEscaneo);
-});
-
 
 // 📌 Asignar la función de escaneo al botón
 document.addEventListener("DOMContentLoaded", () => {
