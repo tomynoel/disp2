@@ -41,15 +41,11 @@ async function registrarRecarga(dispenserId, usuario) {
             headers: {
                 "Content-Type": "application/json"
             },
+            mode: "no-cors", // 🔥 SOLUCIÓN PARA EVITAR CORS
             body: JSON.stringify(datos)
         });
 
-        const resultado = await response.json();
-        if (resultado.status === "ok") {
-            document.getElementById("status").innerText = "Registro guardado!";
-        } else {
-            document.getElementById("status").innerText = "Error: " + resultado.error;
-        }
+        document.getElementById("status").innerText = "Registro enviado (sin respuesta)";
     } catch (error) {
         document.getElementById("status").innerText = "Error de conexión";
         console.error("Error en la solicitud:", error);
