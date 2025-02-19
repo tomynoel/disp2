@@ -1,4 +1,4 @@
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxoY1sE_8dzvolkIKv1DgX4SPbLGNRVCyBUkR1N29iAELjZLFudCTuqEaV76NdfzQLdGg/exec"; // Pega aquí la URL de Apps Script
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxHCeHLFNxbYudyT9vlT9LmCIKdjroN3XIA0moqTT6JusaAI11JqueXDpw-O59-TWi8PQ/exec"; // Pega aquí la URL de Apps Script
 
 let scanner;  // Variable para el escáner QR
 
@@ -52,5 +52,6 @@ async function registrarRecarga(dispenserId, usuario) {
         }
     } catch (error) {
         document.getElementById("status").innerText = "Error de conexión";
+        console.error("Error en la solicitud:", error);
     }
 }
