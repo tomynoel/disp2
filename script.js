@@ -1,4 +1,4 @@
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxc3h7KHe-rhYIUf40zglDrwskTX-MyUjptPzZXEP-oxaT3yMlGBVamRfqVQWEgxkXU-Q/exec"; // Pega aquí la URL de Apps Script
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbz4KR9FypnvRWJWLkaECqn7Y5sI14P1en9XoE2KGEYOKFqwM5WwRgVdl4pB8KoYL6Wenw/exec"; // Pega aquí la URL de Apps Script
 
 let scanner;  // Variable para el escáner QR
 
