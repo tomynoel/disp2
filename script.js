@@ -2,14 +2,14 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-// 🔥 Configuración de Firebase (REEMPLAZA CON TUS DATOS)
+// 🔥 Configuración de Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyCJzNFFjA__D7GDCHkxj_H6_HTtIvUBHzY",
-  authDomain: "registrodis.firebaseapp.com",
-  projectId: "registrodis",
-  storageBucket: "registrodis.firebasestorage.app",
-  messagingSenderId: "274283773647",
-  appId: "1:274283773647:web:4adef02eabc01fde5901ba"
+    authDomain: "registrodis.firebaseapp.com",
+    projectId: "registrodis",
+    storageBucket: "registrodis.firebasestorage.app",
+    messagingSenderId: "274283773647",
+    appId: "1:274283773647:web:4adef02eabc01fde5901ba"
 };
 
 // 🔥 Inicializar Firebase y Firestore
@@ -19,14 +19,18 @@ const db = getFirestore(app);
 // 📌 Función para registrar recarga en Firestore
 async function registrarRecarga(dispenserId, usuario) {
     try {
+        console.log("📤 Registrando en Firebase:", dispenserId, usuario);
+
         await addDoc(collection(db, "recargas"), {
             dispenser: dispenserId,
             usuario: usuario,
-            fecha: serverTimestamp() // 🔥 Firestore generará la fecha automáticamente
+            fecha: serverTimestamp() // 🔥 Fecha automática
         });
-        document.getElementById("status").innerText = "Registro guardado en Firebase!";
+
+        document.getElementById("status").innerText = "✅ Registro guardado en Firebase!";
+        console.log("✅ Registro exitoso.");
     } catch (error) {
-        document.getElementById("status").innerText = "Error al guardar.";
+        document.getElementById("status").innerText = "❌ Error al guardar.";
         console.error("🔥 Error en la solicitud:", error);
     }
 }
@@ -52,16 +56,16 @@ function iniciarEscaneo() {
             qrbox: { width: 250, height: 250 } // Define el tamaño del área de escaneo
         },
         qrCodeMessage => {
-            console.log("QR Detectado:", qrCodeMessage);
+            console.log("🎯 QR Detectado:", qrCodeMessage);
             scanner.stop();
             document.getElementById("reader").style.display = "none";
             registrarRecarga(qrCodeMessage, nombreUsuario);
         },
         errorMessage => {
-            console.warn("No se detectó QR:", errorMessage);
+            console.warn("⚠️ No se detectó QR:", errorMessage);
         }
     ).catch(err => {
-        console.error("Error al iniciar el escáner:", err);
+        console.error("⚠️ Error al iniciar el escáner:", err);
         alert("No se pudo iniciar el escáner. Verifica los permisos de la cámara.");
     });
 }
