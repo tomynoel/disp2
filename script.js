@@ -1,35 +1,8 @@
-const GOOGLE_SHEETS_URL = "https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbwfstXha7KIW7O0Xn0fjqHzZ_LF79z51ar9KM-9UVo9H8Fle91Flf1ZuNyA2j1g1y-MUA/exec"; // Pega aquí la URL de Apps Script
+// 🔥 Importar Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-let scanner;  // Variable para el escáner QR
-
-// Función para iniciar el escaneo
-function iniciarEscaneo() {
-    let nombreUsuario = document.getElementById("nombre").value.trim();
-
-    if (!nombreUsuario) {
-        alert("Por favor, ingresa tu nombre antes de escanear el QR.");
-        return;
-    }
-
-    document.getElementById("reader").style.display = "block"; // Mostrar escáner
-
-    scanner = new Html5Qrcode("reader");
-    scanner.start(
-        { facingMode: "environment" }, // Usa la cámara trasera
-        { fps: 10, qrbox: 250 },
-        qrCodeMessage => {
-            scanner.stop();  // Detiene el escáner después de leer un QR
-            document.getElementById("reader").style.display = "none"; // Oculta el escáner
-
-            registrarRecarga(qrCodeMessage, nombreUsuario);
-        }
-    ).catch(err => {
-        console.error("Error al iniciar el escáner:", err);
-    });
-}
-
-// Función para registrar la recarga
-// 🔥 Configuración de Firebase
+// 🔥 Configuración de Firebase (REEMPLAZA CON TUS DATOS)
 const firebaseConfig = {
     apiKey: "TU_API_KEY",
     authDomain: "TU_PROYECTO.firebaseapp.com",
@@ -39,21 +12,46 @@ const firebaseConfig = {
     appId: "TU_APP_ID"
 };
 
-// 🔥 Inicializar Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+// 🔥 Inicializar Firebase y Firestore
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 // 📌 Función para registrar recarga en Firestore
 async function registrarRecarga(dispenserId, usuario) {
     try {
-        await db.collection("recargas").add({
+        await addDoc(collection(db, "recargas"), {
             dispenser: dispenserId,
             usuario: usuario,
-            fecha: new Date().toLocaleString()
+            fecha: serverTimestamp() // 🔥 Firestore generará la fecha automáticamente
         });
         document.getElementById("status").innerText = "Registro guardado en Firebase!";
     } catch (error) {
         document.getElementById("status").innerText = "Error al guardar.";
-        console.error("Error en la solicitud:", error);
+        console.error("🔥 Error en la solicitud:", error);
     }
+}
+
+// 📌 Función para iniciar el escaneo de QR
+function iniciarEscaneo() {
+    let nombreUsuario = document.getElementById("nombre").value.trim();
+
+    if (!nombreUsuario) {
+        alert("Por favor, ingresa tu nombre antes de escanear el QR.");
+        return;
+    }
+
+    document.getElementById("reader").style.display = "block";
+
+    let scanner = new Html5Qrcode("reader");
+    scanner.start(
+        { facingMode: "environment" }, // Cámara trasera
+        { fps: 10, qrbox: 250 },
+        qrCodeMessage => {
+            scanner.stop();
+            document.getElementById("reader").style.display = "none";
+            registrarRecarga(qrCodeMessage, nombreUsuario);
+        }
+    ).catch(err => {
+        console.error("Error al iniciar el escáner:", err);
+    });
 }
