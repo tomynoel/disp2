@@ -17,23 +17,31 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // 📌 Función para registrar recarga en Firestore
+// 📌 Función para registrar recarga en Firestore con ID aleatorio, fecha y hora formateadas
 async function registrarRecarga(dispenserId, usuario) {
     try {
         console.log("📤 Registrando en Firebase:", dispenserId, usuario);
 
+        // 🔥 Obtener fecha y hora actual en formato deseado
+        const fechaActual = new Date();
+        const fechaFormateada = `${fechaActual.getDate().toString().padStart(2, '0')}/${(fechaActual.getMonth() + 1).toString().padStart(2, '0')}/${fechaActual.getFullYear()}`;
+        const horaFormateada = `${fechaActual.getHours().toString().padStart(2, '0')}:${fechaActual.getMinutes().toString().padStart(2, '0')}:${fechaActual.getSeconds().toString().padStart(2, '0')}`;
+
         await addDoc(collection(db, "recargas"), {
             dispenser: dispenserId,
             usuario: usuario,
-            fecha: serverTimestamp() // 🔥 Fecha automática
+            fecha: fechaFormateada,  // 🔥 Guardamos la fecha en formato dd/mm/aaaa
+            hora: horaFormateada     // 🔥 Guardamos la hora en formato hh:mm:ss
         });
 
-        document.getElementById("status").innerText = "✅ Registro guardado en Firebase!";
-        console.log("✅ Registro exitoso.");
+        document.getElementById("status").innerText = `✅ Registro guardado en Firebase (${fechaFormateada} - ${horaFormateada})!`;
+        console.log("✅ Registro exitoso con fecha:", fechaFormateada, "y hora:", horaFormateada);
     } catch (error) {
         document.getElementById("status").innerText = "❌ Error al guardar.";
         console.error("🔥 Error en la solicitud:", error);
     }
 }
+
 
 // 📌 Función para iniciar el escaneo de QR
 function iniciarEscaneo() {
