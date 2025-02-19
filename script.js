@@ -1,4 +1,4 @@
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzn5ypm0cmtPC2gH3OSdtK3D5JDwtj88r390ow09yBLPPNPpLGNKeFHdZyZiQjxQ17ETw/exec"; // Pega aquí la URL de Apps Script
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxc3h7KHe-rhYIUf40zglDrwskTX-MyUjptPzZXEP-oxaT3yMlGBVamRfqVQWEgxkXU-Q/exec"; // Pega aquí la URL de Apps Script
 
 let scanner;  // Variable para el escáner QR
 
@@ -47,7 +47,6 @@ async function registrarRecarga(dispenserId, usuario) {
         const resultado = await response.json();
         if (resultado.status === "ok") {
             document.getElementById("status").innerText = "Registro guardado!";
-            cargarRegistros(); // Actualizar la tabla después del escaneo
         } else {
             document.getElementById("status").innerText = "Error: " + resultado.error;
         }
@@ -55,27 +54,3 @@ async function registrarRecarga(dispenserId, usuario) {
         document.getElementById("status").innerText = "Error de conexión";
     }
 }
-
-// Función para cargar registros desde Google Sheets y mostrarlos en la tabla
-async function cargarRegistros() {
-    try {
-        const response = await fetch(GOOGLE_SHEETS_URL);
-        const data = await response.json();
-        const tabla = document.getElementById("tabla-recargas");
-        tabla.innerHTML = "";
-
-        data.forEach(registro => {
-            const fila = `<tr>
-                <td>${registro.dispenser}</td>
-                <td>${registro.usuario}</td>
-                <td>${registro.fecha}</td>
-            </tr>`;
-            tabla.innerHTML += fila;
-        });
-    } catch (error) {
-        console.error("Error al cargar registros:", error);
-    }
-}
-
-// Cargar registros al abrir la página
-window.onload = cargarRegistros;
