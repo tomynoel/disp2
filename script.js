@@ -4,12 +4,12 @@ import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.g
 
 // 🔥 Configuración de Firebase (REEMPLAZA CON TUS DATOS)
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "TU_PROYECTO.firebaseapp.com",
-    projectId: "TU_PROYECTO",
-    storageBucket: "TU_PROYECTO.appspot.com",
-    messagingSenderId: "TU_MENSAJERIA_ID",
-    appId: "TU_APP_ID"
+    apiKey: "AIzaSyCJzNFFjA__D7GDCHkxj_H6_HTtIvUBHzY",
+    authDomain: "registrodis.firebaseapp.com",
+    projectId: "registrodis",
+    storageBucket: "registrodis.firebasestorage.app",
+    messagingSenderId: "274283773647",
+    appId: "1:274283773647:web:4adef02eabc01fde5901ba"
 };
 
 // 🔥 Inicializar Firebase y Firestore
