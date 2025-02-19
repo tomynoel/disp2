@@ -1,4 +1,4 @@
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxAbzTZcabHmXW10o80RmlFN0z1gkJhdJUVQ5f19H4m2ZiCFbqvbxPF9ZRWmjKJcppXww/exec"; // Pega aquí la URL de Apps Script
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzn5ypm0cmtPC2gH3OSdtK3D5JDwtj88r390ow09yBLPPNPpLGNKeFHdZyZiQjxQ17ETw/exec"; // Pega aquí la URL de Apps Script
 
 let scanner;  // Variable para el escáner QR
 
@@ -32,7 +32,7 @@ function iniciarEscaneo() {
 async function registrarRecarga(dispenserId, usuario) {
     const datos = {
         dispenser: dispenserId,
-        usuario: usuario  // Asegurarse de que se envía el nombre del usuario
+        usuario: usuario
     };
 
     try {
@@ -68,7 +68,7 @@ async function cargarRegistros() {
             const fila = `<tr>
                 <td>${registro.dispenser}</td>
                 <td>${registro.usuario}</td>
-                <td>${new Date(registro.fecha).toLocaleString()}</td>
+                <td>${registro.fecha}</td>
             </tr>`;
             tabla.innerHTML += fila;
         });
